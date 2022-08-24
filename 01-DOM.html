@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> body {
+        background-image: url("https://s2.glbimg.com/LuGzdNaKyro9WAmIGaeRpuHhvjo=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/8/m/YOAAB6SvKcOTnQt2CcBg/ganyu.jpg");
+        background-repeat:  no-repeat;
+        background-size: 100%;
+        }</style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        //Criando um novo elemento <p> via JS
+        let parag = document.createElement('p')
+        parag.textContent = 'Este parágrafo foi criado com JavaScript'
+        
+        //Vamos colocar o parágrafo criado dentro da div cujo id é root
+        //Para isso, devemos primeiro "capturar" essa div
+
+        let root = document.getElementById('root') //procura um elemento html e o joga dentro de uma variavel
+
+        //Com a div capturada, agora vamos colocar o paragrafoinstanciado no script dentro dela
+        root.appendChild(parag)
+
+        //Criando uma nova div
+        let novaDiv = document.createElement('div')
+        novaDiv.textContent = 'DIV criada com Java Script'
+        novaDiv.style.border = '3px dotted green'
+        novaDiv.style.backgroundColor = 'limegreen'
+        novaDiv.id = 'minhaDiv'
+
+        root.appendChild(novaDiv)
+    </script>
+</body>
+</html>
