@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /*Criando os estilos*/
+        .text1{
+            color: blue;
+            text-align: center;
+            border: 3px solid;
+            border-radius: 5px;
+            border-color: red;
+        }
+        .text2{
+            color: red;
+            text-align: center;
+            border: 3px solid;
+            border-radius: 5px;
+            border-color: blue;
+            
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        //Passando props personalizadas para os componentes
+        const Parag1 = ({nome, sobrenome, ...props}) =>
+            <p className="text1" {...props}> {nome} {sobrenome}</p>
+            
+        //Passando props personalizadas para os componentes
+        const Parag2 = ({dia, mes, ano, ...props}) =>
+            <p className="text2" {...props}>{dia}/{mes}/{ano} </p> 
+
+        //Criando o container para exibir os resultados
+        const container =
+        <>  {/*Não gera um elemento HTML, fragment*/}
+
+            {/*Passando os valores que serão exibidos para as variaveis nome, sobrenome
+            dia mes e ano*/}
+            <Parag1 nome="Lucas" sobrenome="Costa"> </Parag1>
+            <Parag2 dia= {20} mes= {10} ano= {2022}></Parag2>
+
+        </>  
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        root.render(container)  
+    </script>
+    
+</body>
+</html>
