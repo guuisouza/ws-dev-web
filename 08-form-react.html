@@ -19,7 +19,7 @@
     <script type="text/babel">
 
         function Form(){
-            let nome
+            
             // let erro = ''
 
             //Declarando uma variável de estado
@@ -33,10 +33,28 @@
                 O valor inicial da variável de estado é determinado pelo parâmetro de useState()
             */
             const [erro, setErro] = React.useState('')
+
+            //Declarando outra variavel de estado para criar um componente controlado
+
+            const [nome, setNome] = React.useState('')
             //Use state é o valor primeiro, o inicial
 
+            /*Componentes em react foram feitos para serem reutilizados, por isso
+            não se pode usar o atributo id em elementos que pertencem a um
+            componente, porque isso pode levar a mais de um elemento com o mesmo id na mesma pagina
+            o que é proibido
+
+            Em vez de id, usamos um recurso (hook) do react chamado useRef
+            */
+
+            
+
             function handleChange(event){
-                nome = document.getElementById('campo-nome').value
+                //nome = document.getElementById('campo-nome').value
+                
+                //event: informacoes sobre o evento (submit,change,click)
+                //event target: mostra o elemento que disparou o evento,constitui uma forma indireta de referenciar o elemento, sem usar id
+                setNome(event.target.value)
 
                 if(nome !== nome.toUpperCase()){
                     setErro('O nome precisa estar em letras MAÍUSCULAS')
@@ -44,7 +62,7 @@
                 else{ 
                     setErro('')
                 }    
-                document.getElementById('result').textContent = nome
+                // document.getElementById('result').textContent = nome
             }
 
             function handleSubmit(event) {
@@ -57,20 +75,34 @@
                     {/*
                         Em JSX, o atributo HTML "for" deve ser renomeado para "htmlFor"
                     */}
-                <label htmlFor="campo-nome"> Nome </label>
-                <input id="campo-nome" onChange={handleChange} />
-                <br />
-                <div id="result">{nome}</div>
-                <div style={{color: "red"}}>{erro}</div>
-                <button type="submit">Enviar</button>
+                    <label> 
+                        <span>Nome</span> 
+                        {
+                            /*Este input é um elemento controlado. Seu value é mantido em uma variável de estado,
+                            que é atualizada no evento onChange*/
+                        }
+                        <input onChange={handleChange} value={nome} />
+                    </label>
+                    <br />
+                    <div>{nome}</div>
+                    <div style={{color: "red"}}>{erro}</div>
+                    <button type="submit">Enviar</button>
                 </form>
-                
             )
             
         }
+
+        //Duplicando o componente na página
+        const container = 
+            <>
+                <Form />
+
+                <Form />
+                
+            </>
         const root= ReactDOM.createRoot(document.getElementById('root'))
-        root.render(<Form />)
-        //variavel de estado preserva seu valor entra uma atualização e outra no react
+        root.render(container)
+        //variavel de estado preserva seu valor entre uma atualização e outra no react
     </script>
 </body>
 </html>
