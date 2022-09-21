@@ -17,7 +17,6 @@
     </div>
 
     <script type="text/babel">
-
         function Form(){
 
             //Variaveis de estado
@@ -25,26 +24,35 @@
             const [num1, setNum1] = React.useState(0)
             const [num2, setNum2] = React.useState(0)
 
-            function handleChange1(event){
+            {/*
+            function handleChange1(event){ //Manipula o 1° input
                 setNum1(Number(event.target.value))
             }
 
-            function handleChange2(event){
+            function handleChange2(event){ //Manipula o 2° input
                 setNum2(Number(event.target.value))
             }
+            */}
 
-            
+            //Usando uma unica função pra manipular o evento onChange de dois inputs
+            function handleChange(event){//informações sobre o evento disparado
+                if(event.target.name === 'num1'){
+                    setNum1(Number(event.target.value))
+                }
+                else setNum2(Number(event.target.value))
 
+            }
+    
             return(
                 <form>
                     <label>
                         <span>Primeiro número:</span>
-                        <input type="number" value={num1} onChange={handleChange1}/>
+                        <input type="number" name="num1" value={num1} onChange={handleChange}/>
                     </label>
                     <br />
                     <label>
                         <span>Segundo número:</span>
-                        <input type="number" value={num2} onChange={handleChange2} />
+                        <input type="number" name="num2" value={num2} onChange={handleChange} />
                     </label>
                     <div>
                         <span>Soma: </span>
