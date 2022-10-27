@@ -4,73 +4,118 @@ import * as React from 'react'
 // PokemonInfoFallback: o que é exibido enquanto as informações do pokémon
 // são carregadas
 // PokemonDataView: o componente usado para exibir as informações do pokémon
-import {PokemonForm, fetchPokemon, PokemonInfoFallback, PokemonDataView} from '../pokemon'
+import { PokemonForm, fetchPokemon, PokemonInfoFallback, PokemonDataView } from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
-  // 🐨 crie o estado para o pokémon (null)
-  const [pokemon, setPokemon] = React.useState(null)
-  const [error, setError] = React.useState(null)
-  const [status, setStatus] = React.useState('idle')
+  // // 🐨 crie o estado para o pokémon (null)
+  // const [pokemon, setPokemon] = React.useState(null)
+  // const [error, setError] = React.useState(null)
+  // const [status, setStatus] = React.useState('idle')  // Ocioso
 
-  // 🐨 crie React.useEffect de modo a ser chamado sempre que pokemonName mudar. - chamado quando ocorre uma atualização
-  React.useEffect(()=> {
+  const [state, setState] = React.useState ({
+    pokemon: null,
+    error: null,
+    status: 'idle'
+  })
+  //Criando constantes somente-leitura por meio de desestruturação 
+  //da variável de estado objeto
+  const{pokemon, error, status} = state
+  //useEffect() para contagem da quantidade de atualizações do componente.
+  //Nesse caso, não vamos colocar o vetor de dependencias, fazendo assim com que
+  //o useEffect() seja executado em QUALQUER atualização
+
+React.useEffect(()=> {
+  console.log('Componente atualizado')
+})
+
+  // 🐨 crie React.useEffect de modo a ser chamado sempre que pokemonName mudar.
   // 💰 NÃO SE ESQUEÇA DO VETOR DE DEPENDÊNCIAS!
+  React.useEffect(() => {
+    
+    // 💰 se pokemonName é falso (ou uma string vazia) não se preocupe em fazer 
+    // a requisição (retorne precocemente).
+    if(! pokemonName) return
 
-  // 💰 se pokemonName é falso (ou uma string vazia) não se preocupe em fazer 
-  // a requisição (retorne precocemente).
-  if (!pokemonName) return
+    // 🐨 antes de chamar `fetchPokemon`, limpe o estado atual do pokemon
+    // ajustando-o para null.
+    
+    // let newState = {...state} //Tira uma copia do objeto de estado
+    // newState.pokemon = null
+    // newState.error = null
+    // newState.status = 'idle'
+    // setState(newState)
+    setState({...state, pokemon:null, error:null, status:'idle'})
+    
+    // setPokemon(null)
+    // setError(null)
+    // setStatus('idle')
 
-  // 🐨 antes de chamar `fetchPokemon`, limpe o estado atual do pokemon
-  // ajustando-o para null.
-  setPokemon(null)
-  setError(null)
-  setStatus('idle')
+    // (Isso é para habilitar o estado de carregamento ao alternar entre diferentes
+    // pokémon.)
+    // 💰 Use a função `fetchPokemon` para buscar um pokémon pelo seu nome:
+    //   fetchPokemon('Pikachu').then(
+    //     pokemonData => {/* atualize todos os estados aqui */},
+    //   )
+    /*
+    fetchPokemon(pokemonName)
+      .then(  // Callback se der certo
+        pokemonData => setPokemon(pokemonData)
+      )
+      .catch( // Callback se der
+        error => alert('ERRO: ' + error.message)
+      )
+    */
 
-  // (Isso é para habilitar o estado de carregamento ao alternar entre diferentes
-  // pokémon.)
-  // 💰 Use a função `fetchPokemon` para buscar um pokémon pelo seu nome:
-  //   fetchPokemon('Pikachu').then(
-  //     pokemonData => {/* atualize todos os estados aqui */},
-  //   )
-    // fetchPokemon(pokemonName)
-    // // .then( //callback se der certo
-    // //   pokemonData => setPokemon(pokemonData)
-    // // )
-    // // .catch( //callback se der errado
-    // //   error => alert ('ERRO: ' + error.message)
-    // // )
-    async function getData(){ //Funcao assincrona que so vai executar pra baixo depois que o await resolver
-      try{
-        setStatus('pending')
-        const pokemonData =  await fetchPokemon(pokemonName)
-        setPokemon(pokemonData)
-        setStatus('resolved')
+    async function getData() {
+      try {
+        setState({...state, status:'pending'})
+        const pokemonData = await fetchPokemon(pokemonName)
+        // setPokemon(pokemonData)
+        // setStatus('resolved')
+        setState({...state, pokemon:pokemonData, status:'resolved'})
       }
-      catch(error){
-        // armazena o erro para posterior exibicao
-        setError(error)
-        setStatus('rejected')
+      catch(error) {
+        // Armezena o erro para posterior exibição
+        // setError(error)
+        setState({...state, error: error, status:'rejected'})
+        // setStatus('rejected')
       }
     }
     getData()
+
   }, [pokemonName])
- 
+
   // 🐨 return the following things based on the `pokemon` state and `pokemonName` prop:
   // 🐨 retorne o seguinte baseado nos estados `pokemon` e `pokemonName`:
   //   1. não há pokemonName: 'Informe um pokémon'
   //   2. tem pokemonName mas não pokemon: <PokemonInfoFallback name={pokemonName} />
   //   3. tem pokemon: <PokemonDataView pokemon={pokemon} />
-
-  if (error) return(
+  /*
+  if(error) return (
     <div role="alert">
-      ERRO: <pre style={{whitespace: 'normal'}}> {error.message}</pre>
+      ERRO: <pre style={{ whitespace: 'normal' }}> {error.message} </pre>
     </div>
   )
-  if (!pokemonName) return 'Informe um pokemon'
-  else if(pokemonName && !pokemon) return <PokemonInfoFallback name={pokemonName}/>
-  else if(pokemon) return <PokemonDataView pokemon={pokemon}/>
-  // 💣 remova isso
-  return 'TODO'
+  else if(! pokemonName) return 'Informe um pokémon'
+  else if(pokemonName && ! pokemon) return <PokemonInfoFallback name={pokemonName} />
+  else if(pokemon) return <PokemonDataView pokemon={pokemon} />
+  */
+
+  switch(status) {
+    case 'pending':
+      return <PokemonInfoFallback name={pokemonName} />
+    case 'resolved':
+      return <PokemonDataView pokemon={pokemon} />
+    case 'rejected':
+      return (
+        <div role="alert">
+          ERRO: <pre style={{ whitespace: 'normal' }}> {error.message} </pre>
+        </div>
+      )
+    default: // idle
+      return 'Informe um pokémon'
+  }
+  
 }
 
 function Exercicio06() {
