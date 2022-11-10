@@ -3,6 +3,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import { Link } from 'react-router-dom'
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -40,9 +41,22 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+
+        <MenuItem
+          component={Link}
+          to="/karango"
+          onClick={handleClose}
+        >
+          Listagem de Karangos
+        </MenuItem>
+        
+        <MenuItem
+          component={Link}
+          to="/karango/novo"
+          onClick={handleClose}
+        >
+          Cadastro de Karangos
+        </MenuItem>
       </Menu>
     </div>
   );
