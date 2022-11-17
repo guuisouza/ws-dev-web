@@ -4,8 +4,18 @@ import { DataGrid } from '@mui/x-data-grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import api from '../lib/api'
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { width } from '@mui/system';
 
-const columns = [
+
+  
+  
+
+export default function KarangoList(){
+
+  const columns = [
     { field: 'id', headerName: 'Cód.', 
       type: 'number', // Coluna fica alinhada a direita
       width: 90 },
@@ -62,15 +72,53 @@ const columns = [
         Number(params.row?.preco).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})
       )
     },
-  ];
-  
-  
+    {
+      field: 'editar',
+      headerName: 'Editar',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params => (
+        <IconButton aria-label='Editar'>
+          <EditIcon color=""/>
+        </IconButton>  
+      )
+    },
 
-export default function KarangoList(){
+    {
+      field: 'excluir',
+      headerName: 'excluir',
+      headerAlign: 'center',
+      align: 'center',
+      width: 90,
+      renderCell: params => (
+        <IconButton aria-label='Excluir' onClick={() => handleDeleteClick(params.id)}>
+          <DeleteForeverIcon color="error"/>
+        </IconButton>  
+      )
+    }
+  ];
+
+
     const [state, setState] = React.useState({
       karangos: [] //vetor nulo
     })
     const {karangos} = state
+
+    async function handleDeleteClick(id){
+      if (window.confirm('Deseja realmente excluir esse item?')){
+        try{
+          await api.delete(`karangos/${id}`)
+          window.alert('Item excluido com sucesso.')
+          //Recarrega os dados da grid
+          fetchData()
+        }
+
+        catch(error){
+          window.alert('ERRO: Não foi possível excluir o item.\nMotivo:' + error.message)
+        }
+      }
+    }
   
     //useEffect com vetor de dependencias vazio para ser executado apenas uma vez no momento da montagem do componente
     React.useEffect(()=>{
@@ -97,6 +145,18 @@ export default function KarangoList(){
             <h1>Listagem de Karangos</h1>
             <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid
+                    //Esconde os botoes de editar excluir na visualização
+                    sx={{
+                      '& .MuiDataGrid-row button': {
+                        visibility:'hidden'
+                      },
+
+                      '& .MuiDataGrid-row:hover button': {
+                        visibility:'visible'
+                      }
+                    }}
+                    //Retorna a visibilidade dos botoes quando o mouse estiver sobre a linha da grid
+                    
                     rows={karangos}
                     columns={columns}
                     pageSize={10}
